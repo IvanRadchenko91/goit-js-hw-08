@@ -1,37 +1,24 @@
-import { galleryItems } from "./gallery-items.js";
+import { galleryItems } from './gallery-items';
 // Change code below this line
 
-const galleryEl = document.querySelector(".gallery");
+import SimpleLightbox from 'simplelightbox';
+import 'simplelightbox/dist/simple-lightbox.min.css';
 
-function createGalleryItem({ preview, original, description }) {
-  return `<div class="gallery__item">
-            <a class='gallery__link' href='${original}'>
-              <img class="gallery__image" src="${preview}" data-source="${original}" alt="${description}">
-            </a>
-          </div>`;
-}
-
-function renderGalleryItems(galleryItems) {
-  const galleryHtml = [];
-  galleryItems.forEach((item) => {
-    galleryHtml.push(createGalleryItem(item));
-  });
-  return galleryHtml.join("");
-}
-
-function handleImageClick(e) {
-  if (e.target.nodeName !== "IMG") {
-    return;
-  }
-
-  e.preventDefault();
-  showLargeImage(e.target.dataset.source);
-}
-
-function showLargeImage(linkImg) {
-  const instance = basicLightbox.create(`<img src='${linkImg}'>`);
-  instance.show();
-}
-
+const galleryEl = document.querySelector('.gallery');
 galleryEl.innerHTML = renderGalleryItems(galleryItems);
-galleryEl.addEventListener("click", handleImageClick);
+
+function renderGalleryItems(images) {
+  return images
+    .map(
+      ({ preview, original, description }) =>
+        `<a class='gallery__item' href='${original}'>
+            <img class="gallery__image" src="${preview}" alt="${description}">
+          </a>`
+    )
+    .join('');
+}
+
+let gallery = new SimpleLightbox('.gallery a', {
+  captionsData: 'alt',
+  captionDelay: 250,
+});
